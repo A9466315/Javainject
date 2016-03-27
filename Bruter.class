@@ -1,0 +1,192 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+package com.jsql.view.bruteforce;
+
+import java.util.ArrayList;
+
+public class Bruter {
+    public ArrayList<String> characters = new ArrayList();
+    public boolean found = false;
+    public int maxLength;
+    public int minLength;
+    public int count;
+    long starttime;
+    long endtime;
+    public int minutes;
+    public int seconds;
+    public int hours;
+    public int days;
+    public char[] specialCharacters = new char[]{'~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '}', '[', ']', '|', '\\', ';', ':', '\'', '\"', '<', '.', ',', '>', '/', '?', ' '};
+    public boolean done = false;
+    public boolean paused = false;
+
+    public Bruter() {
+    }
+
+    public boolean isFound() {
+        return this.found;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    public void setFound(boolean found) {
+        this.found = found;
+    }
+
+    public synchronized void setEndtime(long endtime) {
+        this.endtime = endtime;
+    }
+
+    public int getCounter() {
+        return this.count;
+    }
+
+    public long getRemainder() {
+        return this.getNumberOfPossibilities() - (long)this.count;
+    }
+
+    public long getNumberOfPossibilities() {
+        long possibilities = 0L;
+
+        for(int i = this.minLength; i <= this.maxLength; ++i) {
+            possibilities += (long)Math.pow((double)this.characters.size(), (double)i);
+        }
+
+        return possibilities;
+    }
+
+    public void addExtendedSet() {
+        for(char c = 0; c <= 31; ++c) {
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void addStandardCharacterSet() {
+        for(char c = 32; c <= 127; ++c) {
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void addLowerCaseLetters() {
+        for(char c = 97; c <= 122; ++c) {
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void addDigits() {
+        for(int c = 0; c <= 9; ++c) {
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void addUpperCaseLetters() {
+        for(char c = 65; c <= 90; ++c) {
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void addSpecialCharacters() {
+        char[] var4 = this.specialCharacters;
+        int var3 = this.specialCharacters.length;
+
+        for(int var2 = 0; var2 < var3; ++var2) {
+            char c = var4[var2];
+            this.characters.add(String.valueOf(c));
+        }
+
+    }
+
+    public void setMaxLength(int i) {
+        this.maxLength = i;
+    }
+
+    public void setMinLength(int i) {
+        this.minLength = i;
+    }
+
+    public int getPerSecond() {
+        try {
+            int i = (int)((long)this.getCounter() / this.calculateTimeDifference());
+            return i;
+        } catch (Exception var3) {
+            return 0;
+        }
+    }
+
+    public String calculateTimeElapsed() {
+        long timeTaken = this.calculateTimeDifference();
+        this.seconds = (int)timeTaken;
+        if(this.seconds > 60) {
+            this.minutes = this.seconds / 60;
+            if(this.minutes * 60 > this.seconds) {
+                --this.minutes;
+            }
+
+            if(this.minutes > 60) {
+                this.hours = this.minutes / 60;
+                if(this.hours * 60 > this.minutes) {
+                    --this.hours;
+                }
+            }
+
+            if(this.hours > 24) {
+                this.days = this.hours / 24;
+                if(this.days * 24 > this.hours) {
+                    --this.days;
+                }
+            }
+
+            this.seconds -= this.minutes * 60;
+            this.minutes -= this.hours * 60;
+            this.hours -= this.days * 24;
+            this.days -= this.hours * 24;
+        }
+
+        return "Time elapsed: " + this.days + "days " + this.hours + "h " + this.minutes + "min " + this.seconds + "s";
+    }
+
+    private long calculateTimeDifference() {
+        long timeTaken = (long)((double)(this.endtime - this.starttime) * 1.0D * Math.pow(10.0D, -9.0D));
+        return timeTaken;
+    }
+
+    public boolean excludeChars(String s) {
+        char[] arrayChars = s.toCharArray();
+
+        for(int i = 0; i < arrayChars.length; ++i) {
+            this.characters.remove(String.valueOf(arrayChars[i]));
+        }
+
+        return this.characters.size() >= this.maxLength;
+    }
+
+    public int getMaxLength() {
+        return this.maxLength;
+    }
+
+    public int getMinLength() {
+        return this.minLength;
+    }
+
+    public void setIsDone(Boolean b) {
+        this.done = b.booleanValue();
+    }
+
+    public boolean isDone() {
+        return this.done;
+    }
+}
